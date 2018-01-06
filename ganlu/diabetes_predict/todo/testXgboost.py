@@ -6,11 +6,6 @@ from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
 import loaddata as ld
 
-#记录程序运行时间
-# import time
-# start_time = time.time()
-# print(start_time)
-
 data = ld.loadgoodData()
 # 构造测试集
 X = data.iloc[:, :-1]
