@@ -11,11 +11,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="model_Xgboost_params.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="model_Xgboost_params.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ganlu/diabetes_predict/main_work/model_Xgboost_params.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="11" column="8" lean-forward="true" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
+            <state relative-caret-position="168">
+              <caret line="7" column="52" lean-forward="false" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="52" />
               <folding>
                 <element signature="e#15#33#0" expanded="true" />
               </folding>
@@ -23,7 +23,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ganlu/diabetes_predict/main_work/test.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="96">
@@ -36,10 +36,9 @@
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ganlu/diabetes_predict/main_work/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="6" column="17" lean-forward="false" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="17" />
+            <state relative-caret-position="168">
+              <caret line="14" column="57" lean-forward="false" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="57" />
               <folding>
-                <element signature="e#90#278#0" expanded="false" />
                 <element signature="e#90#219#1" expanded="false" />
                 <element signature="e#316#754#0" expanded="false" />
                 <element signature="e#316#476#1" expanded="false" />
@@ -78,8 +77,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2020" />
-    <option name="y" value="142" />
+    <option name="x" value="376" />
+    <option name="y" value="292" />
     <option name="width" value="1136" />
     <option name="height" value="838" />
   </component>
@@ -123,21 +122,6 @@
               <item name="ganlu" type="462c0819:PsiDirectoryNode" />
               <item name="diabetes_predict" type="462c0819:PsiDirectoryNode" />
               <item name="main_work" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tianchi" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tianchi" type="462c0819:PsiDirectoryNode" />
-              <item name="ganlu" type="462c0819:PsiDirectoryNode" />
-              <item name="diabetes_predict" type="462c0819:PsiDirectoryNode" />
-              <item name="main_work" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tianchi" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tianchi" type="462c0819:PsiDirectoryNode" />
-              <item name="ganlu" type="462c0819:PsiDirectoryNode" />
-              <item name="diabetes_predict" type="462c0819:PsiDirectoryNode" />
-              <item name="todo" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -292,13 +276,12 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1592" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18387777" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22116603" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31991294" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31991294" sideWeight="0.5021075" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39783493" sideWeight="0.49789253" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -345,7 +328,6 @@
         <state relative-caret-position="480">
           <caret line="77" column="17" lean-forward="false" selection-start-line="77" selection-start-column="4" selection-end-line="77" selection-end-column="17" />
           <folding>
-            <element signature="e#90#278#0" expanded="false" />
             <element signature="e#90#219#1" expanded="false" />
             <element signature="e#316#754#0" expanded="false" />
             <element signature="e#316#476#1" expanded="false" />
@@ -405,22 +387,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ganlu/diabetes_predict/main_work/model_Xgboost_params.py">
+    <entry file="file://$PROJECT_DIR$/ganlu/diabetes_predict/main_work/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="11" column="8" lean-forward="true" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
-          <folding>
-            <element signature="e#15#33#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="96">
+          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ganlu/diabetes_predict/main_work/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="6" column="17" lean-forward="false" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="17" />
+        <state relative-caret-position="168">
+          <caret line="14" column="57" lean-forward="false" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="57" />
           <folding>
-            <element signature="e#90#278#0" expanded="false" />
             <element signature="e#90#219#1" expanded="false" />
             <element signature="e#316#754#0" expanded="false" />
             <element signature="e#316#476#1" expanded="false" />
@@ -434,11 +413,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ganlu/diabetes_predict/main_work/test.py">
+    <entry file="file://$PROJECT_DIR$/ganlu/diabetes_predict/main_work/model_Xgboost_params.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
-          <folding />
+        <state relative-caret-position="168">
+          <caret line="7" column="52" lean-forward="false" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="52" />
+          <folding>
+            <element signature="e#15#33#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
