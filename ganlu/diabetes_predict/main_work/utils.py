@@ -69,6 +69,7 @@ def pre_process(data):
 
     return data
 
+
 def load_all_data_2(filename):
     """
     author:ganlu
@@ -275,4 +276,14 @@ def split_data(trainfile,testfile):
         data_set_temp = data_temp.append(test_set_temp).drop_duplicates(keep=False)
         test_set = test_set.append(test_set_temp)
         data_set = data_set.append(data_set_temp)
+    del data_set["package"]
+    del test_set["package"]
+    del data_set["id"]
+    del test_set["id"]
+    del data_set["体检日期"]
+    del test_set["体检日期"]
+    data_set["性别"] = data_set["性别"].apply(lambda x: 1 if x == "男" else -1)
+    test_set["性别"] = test_set["性别"].apply(lambda x: 1 if x == "男" else -1)
+    data_set = data_set.sample(frac=1,random_state=4).reset_index(drop=True)
+    test_set = test_set.sample(frac=1,random_state=4).reset_index(drop=True)
     return data_set,test_set
