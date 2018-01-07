@@ -1,7 +1,8 @@
-import utils as tl
-import pandas as pd
-import numpy as np
 
 import utils as tl
 
-tl.plot_label("data\d_train_20180102.csv")
+
+
+data_set,test_set = tl.split_data("data/d_train_20180102.csv","data/d_test_A_20180102.csv")
+
+tl.plot_label2(test_set)

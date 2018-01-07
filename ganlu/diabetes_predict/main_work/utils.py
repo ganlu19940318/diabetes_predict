@@ -195,14 +195,84 @@ def plot_label(filename):
     :return 给样本分类图
     """
     data = load_all_data(filename)
+    plot_label2(data)
+
+
+def plot_label2(data):
+    """
+    author:ganlu
+    date:2018-1-6 20:18:42
+    将数据切分成特征和标签
+    :param data:数据
+    :return 给样本分类图
+    """
     data["package"] = data.count(axis=1)
     cols = list(data)
     cols.insert(-1, cols.pop())
     data = data.ix[:, cols]
-    # lists = {}
-    # for value in set(data["package"]):
-    #     lists.update({value: len(data[data["package"] == value])})
+    lists = {}
+    for value in set(data["package"]):
+        lists.update({value: len(data[data["package"] == value])})
+    print(lists)
     fig = plt.figure()
     ax1 = fig.add_subplot(1, 1, 1)
     ax1.hist(np.array(data.ix[:, "package"]))
     plt.show()
+
+
+def sort_for_trainset(data):
+    """
+    author:ganlu
+    date:2018-1-6 20:18:42
+    根据数据集的缺失情况给数据集分类
+    :param filename:要分类的数据
+    :return 分类后的数据集
+    """
+    def format(x):
+        if x <= 22:
+            x = 0
+        elif x <= 27:
+            x = 1
+        elif x <= 34:
+            x = 2
+        elif x <= 39:
+            x = 3
+        else:
+            x = 4
+        return x
+    data["package"] = data.count(axis=1)
+    cols = list(data)
+    cols.insert(-1, cols.pop())
+    data = data.ix[:, cols]
+    data["package"] = data["package"].apply(format)
+    return data
+
+
+def split_data(trainfile,testfile):
+    """
+    author:ganlu
+    date:2018-1-6 20:18:42
+    根据trainset和testset划分数据
+    :param trainfile:trainset位置
+    :param testfile:testset位置
+    :return 划分后的数据集
+        test_set:交叉验证集
+        data_set:训练集
+    """
+    test_set = pd.DataFrame(data=None)
+    data_set = pd.DataFrame(data=None)
+    data_train = load_all_data(trainfile)
+    data_train = sort_for_trainset(data_train)
+    data_test = load_all_data(testfile)
+    data_test = sort_for_trainset(data_test)
+    ratelist = {}
+    for i in set(data_test["package"]):
+        ratelist.update({i: len(data_test[data_test["package"] == i]) / len(data_test)})
+
+    for item in ratelist.items():
+        data_temp = data_train[data_train["package"] == item[0]]
+        test_set_temp = data_temp.sample(frac=0.3 * item[1] * len(data_train) / len(data_temp),random_state=4)
+        data_set_temp = data_temp.append(test_set_temp).drop_duplicates(keep=False)
+        test_set = test_set.append(test_set_temp)
+        data_set = data_set.append(data_set_temp)
+    return data_set,test_set
