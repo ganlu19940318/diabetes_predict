@@ -13,7 +13,7 @@ data = tl.load_good_data("data/d_train_20180102.csv")
 X, y = tl.convert_data_to_featrue_label(data)
 
 # 随机切分数据
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
 
 # knn开工
 knn = KNeighborsRegressor()

@@ -1,5 +1,7 @@
-import utils
+import utils as tl
+import pandas as pd
+import numpy as np
 
-data = utils.load_all_data("data\d_train_20180102.csv")
-print(data.describe())
-print("hello")
+import utils as tl
+
+tl.plot_label("data\d_train_20180102.csv")

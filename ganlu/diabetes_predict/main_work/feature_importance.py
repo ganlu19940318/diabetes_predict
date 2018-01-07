@@ -18,13 +18,13 @@ def ceate_feature_map(features):
 train = pd.read_csv("data/d_train_20180102.csv",encoding="gbk",header=0)
 
 params = {
-    'min_child_weight': 100,
-    'eta': 0.02,
+    'min_child_weight': 9,
+    'eta': 0.1,
     'colsample_bytree': 0.7,
-    'max_depth': 12,
+    'max_depth': 20,
     'subsample': 0.7,
     'alpha': 1,
-    'gamma': 1,
+    'gamma': 25,
     'silent': 1,
     'verbose_eval': True,
     'seed': 12
