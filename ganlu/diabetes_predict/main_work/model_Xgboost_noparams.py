@@ -19,6 +19,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 reg = XGBRegressor()
 reg.fit(X_train, y_train)
 y_predict = reg.predict(X_test)
+print(tl.loss_function(y_predict, y_test))
 
 # 读取比赛题
 exam_set = tl.load_match_data("data/d_test_A_20180102.csv")

@@ -272,7 +272,7 @@ def split_data(trainfile,testfile):
 
     for item in ratelist.items():
         data_temp = data_train[data_train["package"] == item[0]]
-        test_set_temp = data_temp.sample(frac=0.3 * item[1] * len(data_train) / len(data_temp),random_state=4)
+        test_set_temp = data_temp.sample(frac=0.2 * item[1] * len(data_train) / len(data_temp),random_state=4)
         data_set_temp = data_temp.append(test_set_temp).drop_duplicates(keep=False)
         test_set = test_set.append(test_set_temp)
         data_set = data_set.append(data_set_temp)

@@ -28,25 +28,39 @@ def ceate_feature_map(features):
 
 # 2. 新方法
 data_set,test_set = tl.split_data("data/d_train_20180102.csv","data/d_train_20180102.csv")
+del data_set["乙肝表面抗原"]
+del data_set["乙肝表面抗体"]
+del data_set["乙肝e抗原"]
+del data_set["乙肝e抗体"]
+del data_set["乙肝核心抗体"]
+del test_set["乙肝表面抗原"]
+del test_set["乙肝表面抗体"]
+del test_set["乙肝e抗原"]
+del test_set["乙肝e抗体"]
+del test_set["乙肝核心抗体"]
 X_train, y_train = tl.convert_data_to_featrue_label(data_set)
 X_test, y_test = tl.convert_data_to_featrue_label(test_set)
 
 dtrain = xgb.DMatrix(X_train, label=y_train)
 dtest = xgb.DMatrix(X_test, label=y_test)
 
+
+
 # 调参参考
 # http://blog.csdn.net/wzmsltw/article/details/50994481
 
+# for i in [0.01,0.02,0.03,0.04,0.05,0.1,0.2,0.3,0.4]:
+# for i in [1,2,3,4,5,6,7,8,9]:
 param = {
     "seed":4,
     "eval_metric":"rmse",
     "subsample":0.5,
     "booster":"gbtree",
-    'max_depth': 6,
-    'eta': 0.3,
+    'max_depth': 2,
+    'eta': 0.2,
     'silent': 1,
     'objective': "reg:linear",
-    'min_child_weight': 1,
+    'min_child_weight': 3,
     'gamma': 0
 }
 
@@ -79,6 +93,11 @@ print(tl.loss_function(preds,labels))
 exam_set = tl.load_match_data("data/d_test_A_20180102.csv")
 # 数据预处理
 exam_set = tl.pre_process(exam_set)
+del exam_set["乙肝表面抗原"]
+del exam_set["乙肝表面抗体"]
+del exam_set["乙肝e抗原"]
+del exam_set["乙肝e抗体"]
+del exam_set["乙肝核心抗体"]
 
 # 结果预测
 exam_set = xgb.DMatrix(exam_set)
