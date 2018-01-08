@@ -1,10 +1,18 @@
 # coding=utf-8
 import numpy as np
 import xgboost as xgb
-from sklearn.model_selection import train_test_split
 import pandas as pd
 import utils as tl
 import matplotlib.pyplot as plt
+import operator
+
+def ceate_feature_map(features):
+    outfile = open('xgb.fmap', 'w', encoding="utf-8")
+    i = 0
+    for feat in features:
+        outfile.write('{0}\t{1}\tq\n'.format(i, feat))
+        i = i + 1
+    outfile.close()
 
 # 1. 传统方法
 # # data = tl.load_good_data("data/d_train_20180102.csv")
@@ -46,6 +54,21 @@ param = {
 watchlist = [(dtest, 'eval'), (dtrain, 'train')]
 num_round = 60
 bst = xgb.train(param, dtrain, num_round, watchlist, verbose_eval=False)
+
+# # feature importance
+# # 用的时候再打开注释
+# features = [x for x in data_set.columns if x not in []]
+# ceate_feature_map(features)
+# importance = bst.get_fscore(fmap='xgb.fmap')
+# importance = sorted(importance.items(), key=operator.itemgetter(1))
+# df = pd.DataFrame(importance, columns=['feature', 'fscore'])
+# df['fscore'] = df['fscore'] / df['fscore'].sum()
+# df.to_csv("temp/feat_importance.csv", index=False,encoding="utf-8")
+# df.plot(kind='barh', x='feature', y='fscore', legend=False, figsize=(6, 10))
+# plt.rcParams["font.sans-serif"] = ["SimHei"]
+# plt.title('XGBoost Feature Importance')
+# plt.xlabel('relative importance')
+# plt.show()
 
 # this is prediction
 preds = bst.predict(dtest)
