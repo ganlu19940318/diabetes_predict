@@ -27,7 +27,8 @@ def ceate_feature_map(features):
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
 
 # 2. 新方法
-data_set,test_set = tl.split_data("data/d_train_20180102.csv","data/d_train_20180102.csv")
+# data_set,test_set = tl.split_data("data/d_train_20180102.csv","data/d_train_20180102.csv")
+data_set,test_set = tl.split_data("data/d_train_20180102_new.csv","data/d_train_20180102_new.csv")
 del data_set["乙肝表面抗原"]
 del data_set["乙肝表面抗体"]
 del data_set["乙肝e抗原"]
@@ -63,7 +64,6 @@ param = {
     'min_child_weight': 3,
     'gamma': 0
 }
-
 # specify validations set to watch performance
 watchlist = [(dtest, 'eval'), (dtrain, 'train')]
 num_round = 60
@@ -90,7 +90,8 @@ labels = dtest.get_label()
 print(tl.loss_function(preds,labels))
 
 # 读取比赛题
-exam_set = tl.load_match_data("data/d_test_A_20180102.csv")
+# exam_set = tl.load_match_data("data/d_test_A_20180102.csv")
+exam_set = tl.load_match_data("data/d_test_A_20180102_new.csv")
 # 数据预处理
 exam_set = tl.pre_process(exam_set)
 del exam_set["乙肝表面抗原"]
