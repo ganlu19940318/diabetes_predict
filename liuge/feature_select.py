@@ -36,6 +36,6 @@ def select_from_models(features, y):
     return importance
 
 
-def load_importance(path = 'data/feature_importance_selectFromModel_noStandard.csv'):
+def load_importance(path = 'data/feature_importance_selectFromModel'):
     return  pd.read_csv(path, index_col=['index'], encoding='gbk')
 
