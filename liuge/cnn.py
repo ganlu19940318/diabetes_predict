@@ -1,12 +1,9 @@
 import numpy as np
-from sklearn.metrics import mean_squared_error
 from sklearn.cross_validation import KFold
 import tensorflow as tf
 from load_data import *
 from feature_select import *
-from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE
-from imblearn.combine import SMOTETomek
+from sklearn.decomposition import PCA
 
 
 # 权重
@@ -36,15 +33,20 @@ def max_pool_2x2(x):
 
 
 
-FEATURE_MAP_WIDTH = 6
+FEATURE_MAP_WIDTH = 4
 train_data, test_data = preprocessed_data()
 importance = load_importance()
 
-feature_colums = list(importance.index[0:FEATURE_MAP_WIDTH*FEATURE_MAP_WIDTH])
+feature_colums = list(importance.index[0:36])
 print('选用特征：',feature_colums)
+# X = train_data[[f for f in train_data.columns if not f == '血糖']].values
 X = train_data[feature_colums].values
 y = train_data['血糖'].values
+# X_sub = test_data.values
 X_sub =  test_data[feature_colums].values
+pca = PCA(n_components=FEATURE_MAP_WIDTH*FEATURE_MAP_WIDTH)
+X = pca.fit_transform(X,y)
+X_sub = pca.transform(X_sub)
 # y_sub = np.reshape(test_data['血糖'].values,(len(test_data),1))
 
 # define placeholder for inputs to network
@@ -86,7 +88,7 @@ starter_learning_rate = 0.001
 learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
                                            100, 0.96, staircase=True)
 
-train_step = tf.train.AdamOptimizer(learning_rate=0.003).minimize(cross_entropy,global_step=global_step)
+train_step = tf.train.AdamOptimizer(learning_rate=0.001).minimize(cross_entropy,global_step=global_step)
 
 
 
@@ -95,14 +97,14 @@ train_step = tf.train.AdamOptimizer(learning_rate=0.003).minimize(cross_entropy,
 kf = KFold(len(X), n_folds = 6, shuffle=True)
 train_preds = np.zeros(X.shape[0])
 
-ECOPE = 5000
+ECOPE = 2000
 
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
-
-model_name = 'cnn-f'+str(FEATURE_MAP_WIDTH*FEATURE_MAP_WIDTH)
+import time
+model_name = 'cnn-f'+str(FEATURE_MAP_WIDTH*FEATURE_MAP_WIDTH)+'-'+time.strftime("%m%d%H%M", time.localtime())
 save_path = 'models/'+model_name +'/'
 
 for m, (train_index, test_index) in enumerate(kf):
@@ -125,7 +127,7 @@ for m, (train_index, test_index) in enumerate(kf):
             print('fold',m+1,'step',i+1,'train_loss:',train_loss,'test_loss:',test_loss)  # 输出loss值
             if test_loss>last_test_loss:
                 over_count+=1
-                if(over_count>6):
+                if(over_count>=4):
                     saver.restore(sess, save_path=saver.last_checkpoints[-1])
                     break
             else:
@@ -137,7 +139,7 @@ for m, (train_index, test_index) in enumerate(kf):
                 no_dec_count = 0
             else:
                 no_dec_count += 1
-                if (no_dec_count > 15):
+                if (no_dec_count >= 5):
                     print(no_dec_count * 50, 'steps not learning,restore last ckpt')
                     saver.restore(sess, save_path=saver.last_checkpoints[-1])
                     break
@@ -148,9 +150,11 @@ for m, (train_index, test_index) in enumerate(kf):
 
     fig = plt.figure(figsize=(20, 3))  # dpi参数指定绘图对象的分辨率，即每英寸多少个像素，缺省值为80
     axes = fig.add_subplot(1, 1, 1)
-    line1, = axes.plot(range(len(prediction_value)), prediction_value, 'b--', label='cnn', linewidth=2)
+    test_y_sorted = np.sort(np.reshape(test_y,(-1,)))
+    indices =  np.argsort(np.reshape(test_y,(-1,)))
+    line1, = axes.plot(range(len(prediction_value)), prediction_value[indices], 'b--', label='cnn', linewidth=2)
     # line2,=axes.plot(range(len(gbr_pridict)), gbr_pridict, 'r--',label='优选参数')
-    line3, = axes.plot(range(len(test_y)), test_y, 'g', label='true y')
+    line3, = axes.plot(range(len(test_y_sorted)), test_y_sorted, 'g', label='true y')
     axes.grid()
     fig.tight_layout()
     # plt.legend(handles=[line1, line2,line3])
