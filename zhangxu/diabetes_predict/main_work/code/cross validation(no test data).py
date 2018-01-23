@@ -5,14 +5,15 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import xgboost as xgb
 import loaddata as ld
-
+from sklearn.model_selection import cross_val_score
 
 
 
 
 # 数据预处理
-ld.loadgoodData("d_train_20180102")
-train = pd.read_csv("d_train_20180102_solve.csv",encoding="gbk",header=0)
+# ld.loadgoodData("d_train_20180102")
+# train = pd.read_csv("d_train_20180102_solve.csv",encoding="gbk",header=0)
+train = pd.read_csv("train_solve.csv", encoding="gbk", header=0)
 # train_before_eat = train[train['is_eat'] == 0]
 # train_after_eat = train[train['is_eat'] == 1]
 
@@ -29,59 +30,25 @@ train = pd.read_csv("d_train_20180102_solve.csv",encoding="gbk",header=0)
 # 构造测试集
 # X = train.iloc[:, :-1]
 # y = train.iloc[:, -1]
-X = train.drop('label', axis = 1)
-y = train[['id', 'label','is_eat']]
+X = train.drop(['label', 'id'], axis=1)
+y = train['label']
+
+# def rmse_cv(model, X_train, y):
+#     rmse = -cross_val_score(model, X_train, y, scoring="neg_mean_squared_error", cv=5)/2
+#     return rmse
 
 
-# 损失计算函数
+损失计算函数
 def lossfunc(predict, real):
     return sum(np.square(predict-real))/(2 * len(real))
-# def group(df, eat, healthy):
-#     a = df[df['is_eat'] == eat]
-#     X_train_before_eat_healthy = a[a['label_label'] == healthy]
-#     X_train_before_eat_healthy = X_train_before_eat_healthy.drop(['is_eat', 'label_label'], axis = 1)
-#     return X_train_before_eat_healthy
 # 随机切分数据
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,  seed=1)
-
-X_train_before = X_train[X_train['is_eat'] == 0]
-X_train_after = X_train[X_train['is_eat'] == 1]
-X_test_before = X_test[X_test['is_eat'] == 0]
-X_test_after = X_test[X_test['is_eat'] == 1]
-y_train_before = y_train[y_train['is_eat'] == 0]['label']
-y_train_after = y_train[y_train['is_eat'] == 1]['label']
-y_predict_before = y_test[y_test['is_eat'] == 0]
-y_test_before = y_predict_before['label']
-y_predict_after = y_test[y_test['is_eat'] == 1]
-y_test_after = y_predict_after['label']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
 
 
-
-# X_train_before_eat_healthy = group(X_train, 0, 0)
-# X_train_before_eat_unhealthy = group(X_train, 0, 1)
-# X_train_after_eat_healthy = group(X_train, 1, 0)
-# X_train_after_eat_unhealthy = group(X_train, 1, 1)
-# X_test_before_eat_healthy = group(X_test, 0, 0)
-# X_test_before_eat_unhealthy = group(X_test, 0, 1)
-# X_test_after_eat_healthy = group(X_test, 1, 0)
-# X_test_after_eat_unhealthy = group(X_test, 1, 1)
-# y_train_before_eat_healthy = group(y_train, 0, 0)['label']
-# y_train_before_eat_unhealthy = group(y_train, 0, 1)['label']
-# y_train_after_eat_healthy = group(y_train, 1, 0)['label']
-# y_train_after_eat_unhealthy = group(y_train, 1, 1)['label']
-# y_test_before_eat_healthy = group(y_test, 0, 0)['label']
-# y_test_before_eat_unhealthy = group(y_test, 0, 1)['label']
-# y_test_after_eat_healthy = group(y_test, 1, 0)['label']
-# y_test_after_eat_unhealthy = group(y_test, 1, 1)['label']
-# X_train = X_train[a]
-# X_test = X_test[a]
-
-
-# print(lossfunc(knn.predict(X_test),y_test))
 
 #XGboost开工
-d_test = xgb.DMatrix(X_test_before)
-d_train = xgb.DMatrix( X_train_before, label=y_train_before)
+d_test = xgb.DMatrix(X_test)
+d_train = xgb.DMatrix(X_train, label=y_train)
 
 params = {
         'objective': 'reg:linear',
@@ -101,43 +68,17 @@ plst = list(params.items())
 watchlist = [(d_train, 'train')]
 
 #result = xgb.cv(plst, d_train, num_boost_round = 100, early_stopping_rounds=20, verbose_eval=50, show_stdv=False)
-bst = xgb.train(plst, d_train, num_boost_round = 3000, evals = watchlist)
+bst = xgb.train(plst, d_train, num_boost_round=3000, evals=watchlist)
+
 y_exam = bst.predict(d_test)
-y_predict_before['predict'] = y_exam
+y_test = np.array(y_test)
+y_test.tolist()
+print(loss)
 
 
 
 
-d_test = xgb.DMatrix(X_test_after)
-d_train = xgb.DMatrix( X_train_after, label=y_train_after)
 
-params = {
-        'objective': 'reg:linear',
-        'min_child_weight': 1.1,                             #越小越容易过拟合
-        'eta': 0.01,
-        'colsample_bytree': 0.7,
-        'max_depth': 5,                                      #每颗树的最大深度，树高越深，越容易过拟合
-        'subsample': 0.7,                                     #样本随机采样，较低的值使得算法更加保守，防止过拟合，但是太小的值也会造成欠拟合
-        'gamma': 0.1,                                            #后剪枝时，用于控制是否后剪枝的参数
-        'silent': 1,                                           #设置成1则没有运行信息输出，最好是设置为0
-        'seed': 0,                                            #随机数的种子
-        'lambda':10,
-    }
-
-plst = list(params.items())
-# specify validations set to watch performance
-watchlist = [(d_train, 'train')]
-
-#result = xgb.cv(plst, d_train, num_boost_round = 100, early_stopping_rounds=20, verbose_eval=50, show_stdv=False)
-bst = xgb.train(plst, d_train, num_boost_round = 3000, evals = watchlist)
-y_exam = bst.predict(d_test)
-y_predict_after['predict'] = y_exam
-y_predict = pd.concat([y_predict_before[['id', 'predict']], y_predict_after[['id', 'predict']]], axis = 0)
-y_a = y_predict.sort_values(by='id')
-y_b = y_test.sort_values(by='id')
-predict = np.array(y_a['predict'])
-real = np.array(y_b['label'])
-print(lossfunc(predict, real))
 # d_test = xgb.DMatrix(X_test_after_eat)
 # d_train = xgb.DMatrix( X_train_after_eat, label=y_train_after_eat)
 #
