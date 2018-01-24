@@ -23,8 +23,8 @@ lc = lc.append(train_set1)
 train_set2 = lc.drop_duplicates(keep=False)
 
 # 2. 用train_set训练模型,得到1个模型A1
-# ----------------
-X_train, X_test, y_train, y_test = train_test_split(train.drop("血糖",axis=1), train["血糖"], test_size=0.01, random_state=1)
+# ----------------------------------------------------------------------
+X_train, X_test, y_train, y_test = train_test_split(train.drop("血糖",axis=1), train["血糖"], test_size=0, random_state=1)
 train_feat = pd.concat([X_train,y_train],axis=1)
 test_feat = pd.concat([X_test,y_test],axis=1)
 predictors = [f for f in test_feat.columns if f not in ['血糖']]
@@ -79,7 +79,7 @@ joblib.dump(gbm,"A1")
 
 # # 3. 用train_set1和train_set2分别训练模型,可以得到2个模型B1,B2
 train = train_set1
-X_train, X_test, y_train, y_test = train_test_split(train.drop("血糖",axis=1), train["血糖"], test_size=0.01, random_state=1)
+X_train, X_test, y_train, y_test = train_test_split(train.drop("血糖",axis=1), train["血糖"], test_size=0, random_state=1)
 train_feat = pd.concat([X_train,y_train],axis=1)
 test_feat = pd.concat([X_test,y_test],axis=1)
 predictors = [f for f in test_feat.columns if f not in ['血糖']]
@@ -132,10 +132,10 @@ print('CV训练用时{}秒'.format(time.time() - t0))
 submission = pd.DataFrame({'pred': test_preds.mean(axis=1)})
 joblib.dump(gbm,"B1")
 
-####################
+###############################################################################################
 
 train = train_set2
-X_train, X_test, y_train, y_test = train_test_split(train.drop("血糖",axis=1), train["血糖"], test_size=0.01, random_state=1)
+X_train, X_test, y_train, y_test = train_test_split(train.drop("血糖",axis=1), train["血糖"], test_size=0, random_state=1)
 train_feat = pd.concat([X_train,y_train],axis=1)
 test_feat = pd.concat([X_test,y_test],axis=1)
 predictors = [f for f in test_feat.columns if f not in ['血糖']]
@@ -187,30 +187,24 @@ print('CV训练用时{}秒'.format(time.time() - t0))
 
 submission = pd.DataFrame({'pred': test_preds.mean(axis=1)})
 joblib.dump(gbm,"B2")
-# -------------------------------
-# 保存结果,暂时不开
-# submission.to_csv(r'sub{}.csv'.format(datetime.datetime.now().strftime('%Y%m%d_%H%M%S')), header=None,
-#                   index=False, float_format='%.4f')
+# -------------------------------------------------------------------------
 
-# 4. 用模型A1跑test_set,并将结果排序,取排序结果前1.5%为test_set1,其他为test_set2
-# print("hello")
-
+# 4. 用模型A1跑test_set,并将结果排序,取排序结果前0.5%为test_set1,其他为test_set2
 bst = joblib.load("A1")
-# test_set = pd.read_csv('ganlu_d_train_20180102.csv',header=0,encoding='gbk')
-# test_set = test_set.drop("血糖",axis=1)
 test_set = pd.read_csv('ganlu_d_test_20180102.csv',header=0,encoding='gbk')
 test_set["血糖"] = bst.predict(test_set)
 lc = pd.DataFrame(test_set)
-test_set1 = lc.sort_values(["血糖"],ascending=False).head(int(len(lc)*0.015))
+test_set1 = lc.sort_values(["血糖"],ascending=False).head(int(len(lc)*0.005))
 lc = lc.append(test_set1)
 test_set2 = lc.drop_duplicates(keep=False)
 test_set1 = test_set1.drop("血糖",axis=1)
 test_set2 = test_set2.drop("血糖",axis=1)
 
 # 5. 用B1跑test_set1,用B2跑test_set2
+# 这里做了下修改，用A1跑test_set2
 bst = joblib.load("B1")
 test_set1["血糖"] = bst.predict(test_set1)
-bst = joblib.load("B2")
+bst = joblib.load("A1")
 test_set2["血糖"] = bst.predict(test_set2)
 
 # 6. 将B1,B2的combine
@@ -218,6 +212,8 @@ test_set = pd.concat([test_set1,test_set2],axis=0)
 test_set.sort_index(inplace=True)
 label = test_set["血糖"].round(3)
 label.to_csv("result.csv",encoding='gbk',index=None,header=None)
+
+
 
 
 
