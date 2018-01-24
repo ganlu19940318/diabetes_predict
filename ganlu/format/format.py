@@ -24,7 +24,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 
 # 载入数据
-df = pd.read_csv('d_train_20180102.csv',header=0,encoding='gbk')
+df = pd.read_csv('d_train_A_20180102.csv',header=0,encoding='gbk')
 # df.info()显示原始数据属性的基本信息
 # df.info()
 # df.describe()显示属性的一些统计信息
@@ -51,7 +51,9 @@ dummies_df = dummies_df.rename(columns={'??':'feature_sex_unknown','男':'featur
 df = pd.concat([df,dummies_df],axis=1)
 
 # 专家答疑后指出性别和糖尿病无关,所以把性别delete
-df = df.drop(['feature_sex_unknown','feature_sex_male','feature_sex_female'],axis=1)
+if 'feature_sex_unknown' in df.columns:
+    df = df.drop(['feature_sex_unknown'], axis=1)
+df = df.drop(['feature_sex_male','feature_sex_female'],axis=1)
 
 # 对体检日期,我暂时直接拆分成年月日三个特征放进去
 df['feature_year'] = df["体检日期"].map(lambda x: int(x.split('/')[2]))
@@ -186,8 +188,9 @@ for col in df.columns:
         df[col] = (2*df[col] - df[col].max() - df[col].min())/(df[col].max() - df[col].min())
 
 # 把血糖挪到最后一列
-df_temp = df.pop("血糖")
-df = pd.concat([df,df_temp],axis=1)
+if "血糖" in df.columns:
+    df_temp = df.pop("血糖")
+    df = pd.concat([df,df_temp],axis=1)
 # 数据保存
 df.to_csv("ganlu_d_train_20180102.csv",encoding='gbk',index=None)
 
