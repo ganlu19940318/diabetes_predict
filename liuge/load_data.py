@@ -4,36 +4,38 @@ import pandas as pd
 from sklearn import preprocessing
 
 
-def raw_data(train_path = 'data/d_train_20180102.csv', test_path = 'data/d_test_A_20180102.csv'):
+def raw_data(train_path = 'data/d_train_20180102.csv',  test_pathB = 'data/d_test_B_20180128.csv' ):
     """
     :return: 返回原始的train_data&test_data
     """
     train_data = pd.read_csv(train_path,header=0,  encoding='gbk')
-    test_data = pd.read_csv(test_path,header=0, encoding='gbk' )
-    return train_data,test_data
+
+    test_dataB=  pd.read_csv(test_pathB,header=0, encoding='gbk' )
+    return train_data ,test_dataB
 
 
 
-def generated_data(train_path = 'data/train_preprocessing.csv', test_path = 'data/test_preprocessing.csv'):
+def generated_data(train_path = 'data/train_preprocessing.csv', test_pathB = 'data/d_test_B_20180128.csv'):
     """
 
         :return: 返回预处理过的数据
         """
-    train, test = raw_data(train_path, test_path)
+    train, test = raw_data(train_path,  test_pathB)
 
 def outlier_handler(data):
     return 1
 
-def preprocessed_data(train_path = 'data/d_train_20180102.csv', test_path = 'data/d_test_A_20180102.csv'):
+def preprocessed_data(train_path = 'data/d_train_20180102.csv', test_path = 'data/d_test_B_20180128.csv'):
     """
     
     :return: 返回预处理过的数据
     """
-    train,test = raw_data(train_path,test_path)
+    train, testB = raw_data(train_path,test_path)
     train_id = train.id.values.copy()
     feature_columns = [f for f in train.columns if f not in ['id', '血糖']]
-    test_id = test.id.values.copy()
-    data = pd.concat([train, test])
+
+    test_idB = testB.id.values.copy()
+    data = pd.concat([train,   testB])
 
     # 类别映射
     data['性别'] = data['性别'].map({'男': 1, '女': 0})
@@ -48,9 +50,10 @@ def preprocessed_data(train_path = 'data/d_train_20180102.csv', test_path = 'dat
     data[feature_columns] = scaler.fit_transform(data[feature_columns])
 
     train_feat = pd.DataFrame(data[data.id.isin(train_id)])
-    test_feat = pd.DataFrame(data[data.id.isin(test_id)])
-    test_feat.drop(labels=['血糖'], axis=1, inplace=True)
 
-    return train_feat, test_feat
+    test_featB = pd.DataFrame(data[data.id.isin(test_idB)])
+    test_featB.drop(labels=['血糖'], axis=1, inplace=True)
+
+    return train_feat,  test_featB
 
 

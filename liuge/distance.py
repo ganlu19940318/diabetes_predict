@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.metrics import mean_squared_error
 import  os
 curr_names = os.listdir('sub/')
-best = pd.read_csv('sub/0110_pm_result=0.8004.csv',encoding='utf-8',names=[0])
+best = pd.read_csv('sub/xgb-B01281921c.csv',encoding='utf-8',names=[0])
 for name in curr_names:
     curr = pd.read_csv('sub/'+name,encoding='utf-8',names=[0])
     print(name,mean_squared_error(best.values,curr.values)*0.5)

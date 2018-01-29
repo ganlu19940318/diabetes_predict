@@ -43,7 +43,7 @@ for m, (train_index, test_index) in enumerate(kf):
     # ## 定义 input_fn
     def input_fn(df, label):
         feature_cols = {k: tf.constant(df[k].values) for k in FEATURE_COLUMNS}
-        label = tf.constant(label.values)
+        label = tf.constant(np.square(label.values))
         return feature_cols,label
     def input_fn2(df):
         feature_cols = {k: tf.constant(df[k].values) for k in FEATURE_COLUMNS}
@@ -51,7 +51,7 @@ for m, (train_index, test_index) in enumerate(kf):
 
     def train_input_fn():
         '''训练阶段使用的 input_fn'''
-        return input_fn(train_X, train_y)
+        return input_fn(train_X, train_y )
 
 
     def test_input_fn():
@@ -65,14 +65,14 @@ for m, (train_index, test_index) in enumerate(kf):
     # 训练
     regressor.fit(input_fn=train_input_fn,steps=175)
     # 测试
-    prediction_value = regressor.predict(input_fn = test_input_fn,as_iterable=False)
-    print('fold score:',mean_squared_error(test_y.values, prediction_value) * 0.5)
+    prediction_value = np.sqrt(regressor.predict(input_fn = test_input_fn,as_iterable=False))
+    print('fold score:',mean_squared_error( test_y.values, prediction_value) * 0.5)
     #可视化
     ###画图###########################################################################
     import matplotlib.pyplot as plt
     fig = plt.figure(figsize=(20, 3))  # dpi参数指定绘图对象的分辨率，即每英寸多少个像素，缺省值为80
     axes = fig.add_subplot(1, 1, 1)
-    test_y_sorted = np.sort(np.reshape(test_y.values, (-1,)))
+    test_y_sorted = np.sort(np.reshape( test_y.values, (-1,)))
     indices = np.argsort(np.reshape(test_y.values, (-1,)))
     line1, = axes.plot(range(len(prediction_value)), prediction_value[indices], 'b--', label='cnn', linewidth=2)
     # line2,=axes.plot(range(len(gbr_pridict)), gbr_pridict, 'r--',label='优选参数')
@@ -83,7 +83,7 @@ for m, (train_index, test_index) in enumerate(kf):
     plt.legend(handles=[line1, line3])
     plt.title('cnn results')
     plt.show()
-sub_pred = regressor.predict(input_fn = sub_input_fn , as_iterable=True)
+sub_pred = np.sqrt(regressor.predict(input_fn = sub_input_fn , as_iterable=False))
 
 sub_pred = pd.DataFrame(sub_pred).round(3)
 sub_pred.to_csv('sub/' + model_name + '.csv', header=False, index=False, encoding='utf-8')
