@@ -8,7 +8,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 train = pd.read_csv('ganlu_d_train_20180102.csv',header=0,encoding='gbk')
-X_train, X_test, y_train, y_test = train_test_split(train.drop("血糖",axis=1), train["血糖"], test_size=0.3, random_state=1)
+X_train, X_test, y_train, y_test = train_test_split(train.drop("血糖",axis=1), train["血糖"], test_size=0, random_state=1)
 train_feat = pd.concat([X_train,y_train],axis=1)
 test_feat = pd.concat([X_test,y_test],axis=1)
 predictors = [f for f in test_feat.columns if f not in ['血糖']]
@@ -65,5 +65,6 @@ print('线下得分：    {}'.format(mean_squared_error(train_feat['血糖'], tr
 print('CV训练用时{}秒'.format(time.time() - t0))
 
 submission = pd.DataFrame({'pred': test_preds.mean(axis=1)})
+
 submission.to_csv(r'sub{}.csv'.format(datetime.datetime.now().strftime('%Y%m%d_%H%M%S')), header=None,
                   index=False, float_format='%.4f')

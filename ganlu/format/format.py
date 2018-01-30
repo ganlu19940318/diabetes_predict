@@ -15,7 +15,7 @@
 # 11.血糖和尿酸(肾功能)存在相关性,糖尿病到一定程度会影响肾功能 # 添加额外一个特征标记高尿酸人群 #
 # 12.AB榜的数据分布基本一致 # nothing to do #
 
-
+import math
 from sklearn.mixture import GMM
 import numpy as np
 import pandas as pd
@@ -24,7 +24,8 @@ from sklearn.ensemble import RandomForestRegressor
 
 
 # 载入数据
-df = pd.read_csv('d_train_A_20180102.csv',header=0,encoding='gbk')
+df = pd.read_csv('d_train_20180102.csv',header=0,encoding='gbk')
+# df = pd.read_csv('d_test_A_20180102.csv',header=0,encoding='gbk')
 # df.info()显示原始数据属性的基本信息
 # df.info()
 # df.describe()显示属性的一些统计信息
@@ -148,6 +149,37 @@ df = df.drop(["白细胞计数","feature15_low","feature15_normal","feature15_hi
 # 年龄跟血糖有一定的相关性,在中国糖尿病高发年龄大约在40~59之间
 df["age_feature"] = df["年龄"].apply(lambda x: feature(x,40,59))
 
+# 从这里开始大量造特征
+numerics = df.loc[:, ["年龄","*天门冬氨酸氨基转换酶","*丙氨酸氨基转换酶","*碱性磷酸酶",
+                      "*r-谷氨酰基转换酶","*总蛋白","白蛋白","*球蛋白","白球比例",
+                      "甘油三酯","总胆固醇","高密度脂蛋白胆固醇","低密度脂蛋白胆固醇",
+                      "尿素","肌酐","尿酸","红细胞计数","血红蛋白","红细胞压积",
+                      "红细胞平均血红蛋白量","红细胞平均血红蛋白浓度","血小板计数",
+                      "血小板平均体积","血小板体积分布宽度","血小板比积","中性粒细胞%",
+                      "淋巴细胞%","单核细胞%"]]
+for i in range(0, numerics.columns.size - 1):
+    for j in range(0, numerics.columns.size - 1):
+        print(str(i) + "," + str(j) + ":" + "working")
+        if i <= j:
+            name = str(numerics.columns.values[i]) + "*" + str(numerics.columns.values[j])
+            df = pd.concat([df, pd.Series(numerics.iloc[:, i] * numerics.iloc[:, j], name=name)], axis=1)
+        if i < j:
+            name = str(numerics.columns.values[i]) + "+" + str(numerics.columns.values[j])
+            df = pd.concat([df, pd.Series(numerics.iloc[:, i] + numerics.iloc[:, j], name=name)], axis=1)
+        if not i == j:
+            name = str(numerics.columns.values[i]) + "/" + str(numerics.columns.values[j])
+            df = pd.concat([df, pd.Series(numerics.iloc[:, i] / numerics.iloc[:, j], name=name)], axis=1)
+            name = str(numerics.columns.values[i]) + "-" + str(numerics.columns.values[j])
+            df = pd.concat([df, pd.Series(numerics.iloc[:, i] - numerics.iloc[:, j], name=name)], axis=1)
+        if i == j:
+            name = "log" + str(numerics.columns.values[i])
+            df = pd.concat([df, pd.Series(numerics.iloc[:, i], name=name).apply(lambda x: math.log(x))], axis=1)
+            name = "sqrt" + str(numerics.columns.values[i])
+            df = pd.concat([df, pd.Series(numerics.iloc[:, i], name=name).apply(lambda x: math.sqrt(x))], axis=1)
+            name = "log(sqrt)" + str(numerics.columns.values[i])
+            df = pd.concat([df, pd.Series(numerics.iloc[:, i], name=name).apply(lambda x: math.log(math.sqrt(x)))], axis=1)
+
+
 # 肝功能受到损害会影响血糖
 # 传送门:http://health.sina.com.cn/zl/d/sbjy/2014-12-16/1713139.shtml
 # 肝功能异常指标
@@ -192,6 +224,7 @@ if "血糖" in df.columns:
     df_temp = df.pop("血糖")
     df = pd.concat([df,df_temp],axis=1)
 # 数据保存
+print("****************************************data saving****************************************")
 df.to_csv("ganlu_d_train_20180102.csv",encoding='gbk',index=None)
-
-print("***************all good***************")
+# df.to_csv("ganlu_d_test_20180102.csv",encoding='gbk',index=None)
+print("****************************************all good****************************************")
